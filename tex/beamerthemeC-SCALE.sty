@@ -1,0 +1,116 @@
+\ProvidesPackage{beamerthemec-scale}
+
+\mode<presentation>
+\definecolor{cscaleblue}{RGB}{42,73,153}
+\definecolor{cscalegray}{RGB}{118,113,113}
+
+\beamer@centeredfalse
+
+\defbeamertemplate*{frametitle}{cscale theme}{
+  \vbox to 30pt{
+    \vfill
+    \hbox{\usebeamerfont{frametitle}{\insertframetitle}}
+  }
+}
+
+\defbeamertemplate*{footline}{cscale theme}
+{
+\leavevmode
+\begin{beamercolorbox}[wd=\paperwidth,ht=5ex,dp=1ex]{date in foot}
+\qquad\hfill \usebeamerfont{date in foot} \insertdate{} \hfill \insertframenumber/\inserttotalframenumber{}\qquad\ \
+\vskip 6.4pt
+\end{beamercolorbox}
+}
+
+\setbeamercolor{frametitle}{fg=cscaleblue}
+\setbeamercolor{title}{fg=cscaleblue}
+\setbeamercolor{author}{fg=cscalegray}
+\setbeamercolor{institute}{fg=cscalegray}
+\setbeamercolor{date}{fg=cscalegray}
+\setbeamercolor{footline}{fg=cscalegray}
+\setbeamercolor{alerted text}{fg=cscaleblue}
+
+\setbeamertemplate{navigation symbols}{}
+
+\defbeamertemplate*{title page}{customized}[1][]
+{
+\vbox to \textheight {
+  \vskip 4.7mm
+  \null\hskip 6mm \begin{minipage}{117.7mm}
+  {\Large\color{cscaleblue}{C-SCALE} \raisebox{-2mm}{\includegraphics[height=1.06\baselineskip]{C-SCALELogo.pdf}}}\par
+  {\color{cscaleblue}{Copernicus – eoSC AnaLytics Engine}}
+
+  \smallskip
+  \usebeamerfont{title}\color{cscaleblue}{\inserttitle}\par
+  \usebeamerfont{subtitle}\color{cscaleblue}{\insertsubtitle}\null\par
+
+  \vskip 1.6mm
+  \begin{raggedleft}
+  \usebeamerfont{author}\color{cscalegray}{\insertauthor}\par
+  \end{raggedleft}
+
+  \vskip 6.8mm
+  \hfill\usebeamerfont{date}\color{cscalegray}{\insertdate}\hfill\null
+  \end{minipage}
+  }
+}
+
+%\useoutertheme{infolines}
+\setbeamertemplate{headline}{}
+\setbeamersize{text margin left=1.2cm,text margin right=1.0cm}
+%\setlength{\leftmargini}{0.4cm}
+
+\usebackgroundtemplate{
+\ifnum\c@framenumber=1%
+\includegraphics[width=\paperwidth]{C-SCALETitlePage.pdf}
+\else%
+\includegraphics[width=\paperwidth]{C-SCALESlide.pdf}
+\fi
+}
+
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamerfont{title}{size=\Large}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{author}{size=\footnotesize}
+\setbeamerfont{date}{size=\scriptsize}
+\setbeamerfont{date in foot}{size=\tiny}
+\setbeamerfont{frametitle}{size=\Large}
+
+\hypersetup{colorlinks,linkcolor=,urlcolor=cscaleblue}
+
+
+%\setbeamercolor{itemize item}{fg=deepblue}
+%\setbeamercolor{itemize subitem}{fg=deepblue}
+%\setbeamercolor{itemize subsubitem}{fg=cscaleblue}
+%\setbeamercolor{enumerate item}{fg=deepblue}
+%\setbeamercolor{enumerate subitem}{fg=deepblue}
+%\setbeamercolor{enumerate subsubitem}{fg=cscaleblue}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{itemize subitem}{fg=black}
+
+\ProcessOptionsBeamer
+
+\newenvironment{finalframe}
+{\setbeamertemplate{background canvas}
+{\includegraphics[width=\paperwidth]{C-SCALETitlePage.pdf}}
+\setbeamertemplate{footline}{}
+\begin{frame}
+        \advance\leftskip8pt
+        \vskip100pt
+        \color{cscaleblue}\usebeamerfont{title}
+}
+{
+  \vfill
+  \null\hskip 6mm \begin{minipage}{117.7mm}
+  \begin{raggedleft}
+  \usebeamerfont{author}\color{cscalegray}{\insertauthor}\par
+  \end{raggedleft}
+
+  \vskip 6.8mm
+  \hfill\usebeamerfont{date}\color{cscalegray}{\insertdate}\hfill\null
+  \end{minipage}
+\end{frame}}
+

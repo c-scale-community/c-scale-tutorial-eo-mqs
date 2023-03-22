@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  jupyter:
+    container_name: jupyter
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    environment:
+      - JUPYTER_TOKEN=eo-mqs
+    ports:
+      - 8888:8888
+    volumes:
+      - $PWD/data:/work/data
+      - $PWD/notebooks:/work/notebooks

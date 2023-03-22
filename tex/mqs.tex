@@ -1,0 +1,213 @@
+\documentclass[c,aspectratio=169,14pt]{beamer}
+\usetheme{C-SCALE}
+
+\usepackage[sfdefault,lf]{carlito}
+%\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+%\usepackage{amsmath,amssymb}
+%\usepackage{xmpmulti}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[czech]{babel}
+\usepackage{tikz}
+%\usepackage{colortbl,xspace}
+\usepackage{tabularx}
+\usepackage{mdframed}
+%\usepackage{xcolor}
+%\usepackage{eurosym}
+\usepackage{ragged2e}
+\usepackage{bbding}
+
+\input{parrot}
+
+
+%\usepackage{background}
+%\backgroundsetup{
+%    placement=center,
+%    scale=5,
+%    color=black,
+%    contents={DRAFT},
+%    opacity=.05
+%}
+%\setbeamertemplate{background}{\BgMaterial}%Uncomment for watermark
+
+
+
+\begin{document}
+
+\title{EO Metadata Query Service}
+\subtitle{Efficient Discovery of Copernicus Data Assets}
+\author{Stefan Reimond, EODC | Zdeněk Šustr, CESNET\\\textit{stefan.reimond@eodc.eu} | \textit{sustr4@cesnet.cz}}
+\date{C-SCALE | 22~March 2023}
+
+\begin{frame}[plain]
+\vspace{8ex}
+\maketitle
+\end{frame}
+
+
+\begin{frame}{Service Introduction}
+
+EO-MQS (Earth Observation Metadata Query Service)
+\begin{itemize}
+\item Evolved from the original plan to federate Copernicus Data providers within C-SCALE
+\begin{itemize}
+\item \alert{Discovery} across the federation a major goal
+\item \alert{Avoid} creating yet another matadata catalogue!
+\item Data \alert{access} is outside the scope of the EO-MQS 
+\end{itemize}
+\item Main premise: partners already know where their data are
+\begin{itemize}
+\item Bring their discovery interfaces under a common one
+\begin{itemize}
+\item single point
+\item shared protocol
+\end{itemize}
+\item describe their datasets and data retention policies
+\item use that to pre-select candidates and redistribute user queries
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Datasets and Retention Policies}
+
+\begin{itemize}
+\item Acknowledge that different partners have different data
+\begin{itemize}
+\item National archives (full history, limited area)
+\item Discipline archives (limited selection of product types, varying retention time)
+\item Redistribution services (global coverage, short retention)
+\item Big players (ambition to build global archive)
+\end{itemize}
+\item[$\implies$] Not every query needs to be redistributed to every partner
+\begin{itemize}
+\item Understand the query, select matching providers
+\item Currently taking into account only product type
+\begin{itemize}
+\item \textit{Area} and \textit{time} filters not yet applied
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Providers' Catalogue}
+\begin{itemize}
+\item Called the \textit{EO Resource Catalogue} initially $\rightarrow$ confusion
+\item Has \alert{only} provider information, not data (product) information
+\begin{itemize}
+\item Partners
+\item Contacts
+\item Services
+\item Endpoints
+\end{itemize}
+\item Adopting the well known GOC-DB (\url{https://goc.egi.eu/})
+\begin{itemize}
+\item The ``Grid Configuration Database'', put to new uses
+\item Keep track of members and relevant service endpoints\\{\scriptsize\url{https://goc.egi.eu/gocdbpi/public/?method=get_service_endpoint&scope=C-SCALE}}
+\item Originally also intended for datasets and retention policies, but the choice of protocol changed that
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Choosing the Common Protocol}
+\begin{itemize}
+\item Choose from those already used in the federation?
+\begin{itemize}
+\item OpenSearch, OData, CWS, STAC
+\item Then implement translation
+\end{itemize}
+\onslide<1>{
+\item \alert{STAC} selected 
+\begin{itemize}
+\item modern protocol
+\item lots of products supporting it
+\item active community
+\item \url{https://mqs.eodc.eu/stac/v1/}
+\end{itemize}
+\item Features
+\begin{itemize}
+\item Asset-focused: STAC breaks datasets into assets for easy data discovery.
+\item Interoperability: STAC promotes compatibility with different tools and services.
+\item Extensibility: STAC allows for custom metadata fields and extensions.
+\end{itemize}}
+\end{itemize}
+\onslide<2>{
+\begin{tikzpicture}[remember picture,overlay]
+\node at (current page.center) {\includegraphics[height=.95\textheight]{img/d22-img001.png}};
+\end{tikzpicture}}
+\end{frame}
+
+
+\begin{frame}{Demo: EO-MQS in Action}
+\begin{itemize}
+    \item Browsing and visualizing
+    \begin{itemize}
+    \item Get to know the EO-MQS in your browser with STAC Browser and other tools
+    \end{itemize}  
+    \item Working with the EO-MQS in Python
+    \begin{itemize}
+    \item Interact with EO-MQS programmatically in Jupyter notebooks.    
+    \end{itemize}      
+    \item Extra: how to become a data prvoider?
+    \begin{itemize}
+    \item Glance at the GOCDB
+    \end{itemize}  
+\end{itemize}      
+Let's get started $\rightarrow$ \url{https://mqs.eodc.eu/help}  
+\end{frame}
+
+
+
+
+\begin{frame}{Challenges}
+\begin{itemize}
+\item Standardized STAC Collections structure?
+\begin{itemize}
+\item At least for members who are building new STAC databases, it might make sense to use a common collection structure
+\end{itemize}
+\item Paging
+\begin{itemize}
+\item How to handle item paging when multiple backends respond?
+\item Cache and collate own pages? Send more than the query asked for?
+\end{itemize}
+\item Support of STAC API extensions?
+\begin{itemize}
+\item The EO-MQS officially supports the STAC API Core parmaters
+\item API Extension with filtering functionality is valuable, but hard to realize across federation
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Outlook}
+    \begin{itemize}
+    \item Constant improvement of EO-MQS package
+    \begin{itemize}
+        \item New features
+        \item Fixing bugs 
+        \item Better documentation
+    \end{itemize}
+    \item Release of STAC Browser v3
+    \begin{itemize}
+    \item Recently published, allows searching and filtering in the browser
+    \item Will be deployed soon at \url{https://mqs.eodc.eu/browser} 
+    \end{itemize}
+    \item EOSC Service Onboarding
+    \begin{itemize}
+    \item The EO-MQS is presently undergoing onboarding as an EOSC service
+    \end{itemize}
+    \end{itemize}
+    \end{frame}
+\begin{finalframe}
+\hfill Thank you\hfill\null
+
+\medskip
+\hfill \large Questions?\hfill\null
+
+\end{finalframe}
+
+\end{document}

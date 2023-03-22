@@ -1,0 +1,281 @@
+\documentclass[c,aspectratio=169,14pt]{beamer}
+\usetheme{C-SCALE}
+
+\usepackage[sfdefault,lf]{carlito}
+%\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+%\usepackage{amsmath,amssymb}
+%\usepackage{xmpmulti}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[czech]{babel}
+\usepackage{tikz}
+%\usepackage{colortbl,xspace}
+\usepackage{tabularx}
+\usepackage{mdframed}
+%\usepackage{xcolor}
+%\usepackage{eurosym}
+\usepackage{ragged2e}
+\usepackage{bbding}
+
+\input{parrot}
+
+
+%\usepackage{background}
+%\backgroundsetup{
+%    placement=center,
+%    scale=5,
+%    color=black,
+%    contents={DRAFT},
+%    opacity=.05
+%}
+%\setbeamertemplate{background}{\BgMaterial}%Uncomment for watermark
+
+
+
+\begin{document}
+
+\title{WP2 Status Report}
+\subtitle{Did we do anything over the Summer?}
+\author{Zdeněk Šustr, CESNET\\\textit{sustr4@cesnet.cz}}
+\date{C-SCALE | 14~June 2022}
+
+\begin{frame}[plain]
+\vspace{8ex}
+\maketitle
+\end{frame}
+
+
+\begin{frame}{Goals Reminder}
+Main goals for the WP
+\begin{itemize}
+\item \alert{Discoverability}
+\begin{itemize}
+\item \alert{find} data in a uniform way $\implies$ STAC (T2.2)
+\end{itemize}
+\item \alert{Accessibility}
+\begin{itemize}
+\item \alert{get} data in a uniform way $\implies$ HTTPS/OIDC (T2.1)
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Discoverability}
+
+\begin{itemize}
+\item \alert{STAC} (Spatio-Temporal Asset Catalogue) selected
+\item Currently \alert{STAC Core}, discussing extensions
+\item Greater challenge, no support at any partner site, originally
+\item Greater detail than other protocols (Open Search, CSW)
+\begin{itemize}
+\item STAC \texttt{item} includes multiple \texttt{assets} (inidividual image files), which is typically not covered by current metadata databases
+
+\smallskip
+\item[$\implies$] additional database under the STAC interface
+\item[$\implies$] \alert{fun challenge} in populating it
+\item \textbf{Reconstruct from various metadata files}
+\item Predict from subset (e.g., OpenSearch response)
+\begin{itemize}
+\item Would make sense for high-turnover repositories (Relays)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Common Collections Structure}
+\begin{itemize}
+\item Intention formulated over the Summer, delaying \alert{M06}
+\item Partners who are only setting up their STACs could benefit from a shared structure of STAC collections.
+\begin{itemize}
+\item[e.g.] do all Sentinel~2 products belong into a single collection, or do we separate L1C and L2A?
+\item Similar for other platforms
+\item Simplifies provider onboarding in the future
+\end{itemize}
+\item Work in progress (disrupted by holidays)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{User-level Catalogue}
+
+User-level STAC Catalogue, a.k.a. ``central'' catalogue
+\begin{itemize}
+\item Preferrably owned by WP4, but supported by WP2
+\begin{itemize}
+\item User-driven design
+\end{itemize}
+\item \url{https://resto.c-scale.zcu.cz/}
+\item Place to store STAC metadata \alert{at user level}
+\begin{itemize}
+\item \textit{“I have produced, downloaded or found something and I need to keep track of it\,\dots”}
+\item Also useful for temporary datasets, e.g., for demos
+\end{itemize}
+\item Only for associated use cases
+\begin{itemize}
+\item Ask for access, tread carefully
+\item Might integrate with Check-in in \textit{Upscale}
+\end{itemize}
+\item Based on \url{https://github.com/jjrom/resto}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Implementation Status}
+\begin{itemize}
+\item MQS online: \url{https://mqs.eodc.eu/stac/v1/}
+\item VITO
+\begin{itemize}
+	\item Done, without extensions
+	\item \url{https://services.terrascope.be/stac/}
+\end{itemize}
+\item EODC
+\begin{itemize}
+	\item Partly Done: \url{https://stac.eodc.eu/api/v1}
+	\item Only Sentinel 1 at the moment
+\end{itemize}
+\item CESNET/GRNET
+\begin{itemize}
+	\item \url{https://stac.cesnet.cz/}
+	\item Metadata production \texttt{cron} job avaiable for S1, S2, S3, S5p
+	\item Only problem with S3 SRAL L1 -- not supported by \textit{stactools}
+\end{itemize}
+\item CloudFerro
+\begin{itemize}
+	\item ?
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Accessibility}
+
+Why HTTP?
+\begin{itemize}
+\item simple \emph{many:1}
+\item remote-friendly, latency agnostic
+\begin{itemize}
+\item range specification is there for partial downloads
+\end{itemize}
+\item default for many providers, easy to implement for others
+\item other ``object--like'' alternatives (S3?) permissible
+\item Random access (mounted file system) is complicated
+\begin{itemize}
+\item Difficult to establish and track
+\item[\textbf{+}] Tempts users to reuse what they know from local workflows\par\smallskip \texttt{find /mnt/c-scale-federation -name "*\_20220922*"}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Authentication}
+Why can't it just be open (Why OIDC?)
+\begin{itemize}
+\item Open Data vs. service funding
+\begin{itemize}
+\item Statistics required by funders to “pay” for the resources
+\end{itemize}
+\end{itemize}
+How do we address that
+\begin{itemize}
+\item VOs set up, attributes collected on registration
+\begin{itemize}
+\item attributes included in OIDC tokens
+\item \url{https://confluence.egi.eu/x/f4YcC}
+\end{itemize}
+\item Problem of coexistence with ``national'' users
+\begin{itemize}
+\item How to make sure Check-in users and local federation (Terragrid, e-Infra.CZ,\,\dots) users can access the same resources.
+\item \textbf{Still under discussion three months later}
+\item Integrating all under Check-in is not fesible.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Implementation Status -- Central}
+
+\begin{itemize}
+\item Support in Perun
+\begin{itemize}
+\item Done
+\end{itemize}
+\item Support in Check-in
+\begin{itemize}
+\item Done
+\end{itemize}
+\item Entitlements in token:\\
+
+\begin{minipage}{.9\textwidth}
+\footnotesize
+\tt
+        \rule{0pt}{.6cm}"urn:mace:egi.eu:res:c-scale:user-category:education\#aai.egi.eu",
+        "urn:mace:egi.eu:res:c-scale:company:CESNET\#aai.egi.eu",
+        "urn:mace:egi.eu:res:c-scale:accept-email:true\#aai.egi.eu",
+        "urn:mace:egi.eu:res:c-scale:country:CZ\#aai.egi.eu",
+        "urn:mace:egi.eu:res:c-scale:research-field:land\#aai.egi.eu",
+        "urn:mace:egi.eu:res:c-scale:user-function:researcher\#aai.egi.eu",
+\end{minipage}
+\item[\dots] \rule{0pt}{.6cm}hence every user carries their aggregation details with them
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Implementation Status -- Partners}
+
+\begin{itemize}
+\item VITO
+\begin{itemize}
+\item integration in IdP done and tested
+\item integration in download service in progress
+\end{itemize}
+\item EODC
+\begin{itemize}
+\item Early progress
+\end{itemize}
+\item CESNET/GRNET
+\begin{itemize}
+\item Functionality for free with DHuS\,3.0, integration pending
+\item Need to move the national userbase to an IdP as well
+\begin{itemize}
+\item which simplifies things
+\end{itemize}
+\end{itemize}
+\item CloudFerro
+\begin{itemize}
+\item ?
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Summary: Status of the Federation}
+\begin{itemize}
+\item Uneven coverage
+\begin{itemize}
+\item Expected
+\item Partially overcome by specific provisions for specific use cases
+\end{itemize}
+\item Not growing
+\begin{itemize}
+\item Understandable, no proper procedure to join -- \textbf{TODO}
+\item Attracting sites to participate
+\begin{itemize}
+\item C-SCALE ``compute'' partners?
+\item CollGS sites? We have candidates but no takers.
+\end{itemize}
+\end{itemize}
+\item Heavily Sentinel-centric
+\begin{itemize}
+\item We say ``Copernicus'', but we almost always mean ``Sentinel''
+\end{itemize}
+\item Delayed goal: \href{https://confluence.egi.eu/x/lhBmBQ}{M06 Enhanced Federation-wide metadata}
+\end{itemize}
+\end{frame}
+
+
+\begin{finalframe}
+\hfill Out\hfill\null
+\end{finalframe}
+
+\end{document}

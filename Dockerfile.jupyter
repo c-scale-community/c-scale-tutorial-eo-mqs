@@ -1,0 +1,10 @@
+FROM continuumio/miniconda3:latest
+
+COPY environment.jupyter.yml .
+
+RUN conda env update -n base -f environment.jupyter.yml --prune
+
+WORKDIR /work
+
+CMD ["jupyter-lab","--ip=0.0.0.0","--notebook-dir=/work/","--no-browser","--allow-root"]
+
