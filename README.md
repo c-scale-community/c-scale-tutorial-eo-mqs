@@ -1,6 +1,7 @@
 # EO-MQS Tutorial for C-SCALE
 
-This project provides a brief introduction of the Earth Observation Metadata Query Service ([EO-MQS](mqs.eodc.eu/browser)) for C-SCALE.
+This project provides a brief introduction of the Earth Observation Metadata Query Service
+([EO-MQS](https://wiki.c-scale.eu/C-SCALE/c-scale-services/eo-mqs)) for C-SCALE.
 
 ## Getting started
 
